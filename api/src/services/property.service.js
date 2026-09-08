@@ -99,3 +99,18 @@ export const updateProperty = async (propertyId, userId, data) => {
 
   return property;
 };
+
+export const deleteProperty = async (propertyId, userId) => {
+  const property = await Property.findOneAndDelete({
+    _id: propertyId,
+    owner: userId,
+  });
+
+  if (!property) {
+    const error = new Error("Property not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return property;
+};
