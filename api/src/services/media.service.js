@@ -45,3 +45,23 @@ export const createMedia = async (data, file, userId) => {
 
   return media;
 };
+
+export const getInspectionMedia = async (inspectionId, userId) => {
+  const existingInspection = await Inspection.findOne({
+    _id: inspectionId,
+    inspector: userId,
+  });
+
+  if (!existingInspection) {
+    const error = new Error("Inspection not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const media = await Media.find({
+    inspection: inspectionId,
+    uploadedBy: userId,
+  }).sort({ createdAt: -1 });
+
+  return media;
+};
