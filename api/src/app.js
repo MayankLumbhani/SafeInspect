@@ -6,6 +6,7 @@ import contactRoutes from "./routes/contact.routes.js";
 import inspectionRoutes from "./routes/inspection.routes.js";
 import mediaRoutes from "./routes/media.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
+import path from "path";
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.get("/health", (req, res) => {
     message: "SafeInspect API is running",
   });
 });
+
+app.use("/uploads", express.static(path.resolve("uploads")));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/properties", propertyRoutes);
