@@ -21,8 +21,9 @@ export const createContact = async (data, userId) => {
 };
 
 export const getContacts = async (userId) => {
-  const contacts = await Contact.find({ owner: userId })
-    .sort({ createdAt: -1 });
+  const contacts = await Contact.find({ owner: userId }).sort({
+    createdAt: -1,
+  });
 
   return contacts;
 };
@@ -51,6 +52,18 @@ export const updateContact = async (contactId, userId, data) => {
   if (!contact) {
     const error = new Error("Contact not found");
     error.statusCode = 404;
+    throw error;
+  }
+
+  if (data.name !== undefined && !data.name.trim()) {
+    const error = new Error("Name cannot be empty");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (data.phone !== undefined && !data.phone.trim()) {
+    const error = new Error("Phone cannot be empty");
+    error.statusCode = 400;
     throw error;
   }
 
