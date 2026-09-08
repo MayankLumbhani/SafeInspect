@@ -41,3 +41,43 @@ export const getContactById = async (contactId, userId) => {
 
   return contact;
 };
+
+export const updateContact = async (contactId, userId, data) => {
+  const contact = await Contact.findOne({
+    _id: contactId,
+    owner: userId,
+  });
+
+  if (!contact) {
+    const error = new Error("Contact not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const allowedFields = ["name", "phone", "email", "notes"];
+
+  allowedFields.forEach((field) => {
+    if (data[field] !== undefined) {
+      contact[field] = data[field];
+    }
+  });
+
+  await contact.save();
+
+  return contact;
+};
+
+export const deleteContact = async (contactId, userId) => {
+  const contact = await Contact.findOneAndDelete({
+    _id: contactId,
+    owner: userId,
+  });
+
+  if (!contact) {
+    const error = new Error("Contact not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return contact;
+};
