@@ -56,3 +56,62 @@ export const getInspectionById = async (inspectionId, userId) => {
 
   return inspection;
 };
+
+export const addRoom = async (inspectionId, userId, data) => {
+  const { name, notes } = data;
+
+  if (!name || !name.trim()) {
+    const error = new Error("Room name is required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const inspection = await Inspection.findOne({
+    _id: inspectionId,
+    inspector: userId,
+  });
+
+  if (!inspection) {
+    const error = new Error("Inspection not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  inspection.rooms.push({
+    name: name.trim(),
+    notes: notes || "",
+  });
+
+  await inspection.save();
+
+  return inspection;
+};
+
+export const updateInspection = async (
+  inspectionId,
+  userId,
+  data
+) => {
+  const inspection = await Inspection.findOne({
+    _id: inspectionId,
+    inspector: userId,
+  });
+
+  if (!inspection) {
+    const error = new Error("Inspection not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (data.status !== undefined) {
+    inspection.status = data.status;
+  }
+
+  if (data.notes !== undefined) {
+    inspection.notes = data.notes;
+  }
+
+  await inspection.save();
+
+  return inspection;
+};
