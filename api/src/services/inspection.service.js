@@ -115,3 +115,18 @@ export const updateInspection = async (
 
   return inspection;
 };
+
+export const deleteInspection = async (inspectionId, userId) => {
+  const inspection = await Inspection.findOneAndDelete({
+    _id: inspectionId,
+    inspector: userId,
+  });
+
+  if (!inspection) {
+    const error = new Error("Inspection not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return inspection;
+};
