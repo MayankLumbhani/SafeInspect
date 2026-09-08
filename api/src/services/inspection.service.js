@@ -31,3 +31,28 @@ export const createInspection = async (data, userId) => {
 
   return inspection;
 };
+
+export const getInspections = async (userId) => {
+  const inspections = await Inspection.find({
+    inspector: userId,
+  })
+    .populate("property", "title type address city")
+    .sort({ createdAt: -1 });
+
+  return inspections;
+};
+
+export const getInspectionById = async (inspectionId, userId) => {
+  const inspection = await Inspection.findOne({
+    _id: inspectionId,
+    inspector: userId,
+  }).populate("property", "title type address city");
+
+  if (!inspection) {
+    const error = new Error("Inspection not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return inspection;
+};
