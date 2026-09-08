@@ -72,3 +72,22 @@ export const loginUser = async ({ email, password }) => {
     token,
   };
 };
+
+export const getCurrentUser = async (userId) => {
+  const user = await User.findById(userId).select("-passwordHash");
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
+};
