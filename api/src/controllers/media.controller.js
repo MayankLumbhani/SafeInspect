@@ -1,6 +1,7 @@
 import {
   createMedia,
   getInspectionMedia,
+  deleteMedia,
 } from "../services/media.service.js";
 
 export const uploadMedia = async (req, res, next) => {
@@ -31,6 +32,22 @@ export const getMediaByInspection = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: { media },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteMediaById = async (req, res, next) => {
+  try {
+    await deleteMedia(
+      req.params.id,
+      req.user.userId
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Media deleted successfully",
     });
   } catch (error) {
     next(error);

@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   uploadMedia,
   getMediaByInspection,
+  deleteMediaById,
 } from "../controllers/media.controller.js";
 import { authenticate } from "../middleware/auth.middleware.js";
 import { upload } from "../middleware/upload.middleware.js";
@@ -21,5 +22,10 @@ router.post(
   uploadMedia
 );
 
+router.delete(
+  "/:id",
+  authenticate,
+  deleteMediaById
+);
 
 export default router;
