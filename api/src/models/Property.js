@@ -65,11 +65,14 @@ const propertySchema = new mongoose.Schema(
       latitude: {
         type: Number,
         default: null,
+        min: -90,
+        max: 90,
       },
-
       longitude: {
         type: Number,
         default: null,
+        min: -180,
+        max: 180,
       },
     },
 
