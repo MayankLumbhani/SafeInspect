@@ -47,3 +47,55 @@ export const getProperties = async (userId) => {
 
   return properties;
 };
+
+export const getPropertyById = async (propertyId, userId) => {
+  const property = await Property.findOne({
+    _id: propertyId,
+    owner: userId,
+  });
+
+  if (!property) {
+    const error = new Error("Property not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return property;
+};
+
+export const updateProperty = async (propertyId, userId, data) => {
+  const property = await Property.findOne({
+    _id: propertyId,
+    owner: userId,
+  });
+
+  if (!property) {
+    const error = new Error("Property not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const allowedFields = [
+    "title",
+    "type",
+    "address",
+    "city",
+    "description",
+    "bedrooms",
+    "bathrooms",
+    "rent",
+    "contact",
+    "photos",
+    "location",
+  ];
+
+  allowedFields.forEach((field) => {
+    if (data[field] !== undefined) {
+      property[field] = data[field];
+    }
+  });
+
+  await property.save();
+
+  return property;
+};
