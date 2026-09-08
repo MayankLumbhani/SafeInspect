@@ -1,4 +1,7 @@
-import { createProperty } from "../services/property.service.js";
+import {
+  createProperty,
+  getProperties,
+} from "../services/property.service.js";
 
 export const create = async (req, res, next) => {
   try {
@@ -7,6 +10,19 @@ export const create = async (req, res, next) => {
     res.status(201).json({
       success: true,
       data: { property },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAll = async (req, res, next) => {
+  try {
+    const properties = await getProperties(req.user.userId);
+
+    res.status(200).json({
+      success: true,
+      data: { properties },
     });
   } catch (error) {
     next(error);

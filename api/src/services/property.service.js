@@ -40,3 +40,10 @@ export const createProperty = async (data, userId) => {
 
   return property;
 };
+
+export const getProperties = async (userId) => {
+  const properties = await Property.find({ owner: userId })
+    .sort({ createdAt: -1 });
+
+  return properties;
+};
