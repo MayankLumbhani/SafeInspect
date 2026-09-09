@@ -5,6 +5,7 @@ import propertyRoutes from "./routes/property.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import inspectionRoutes from "./routes/inspection.routes.js";
 import mediaRoutes from "./routes/media.routes.js";
+import locationRoutes from "./routes/location.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import path from "path";
 
@@ -27,6 +28,7 @@ app.use("/api/v1/properties", propertyRoutes);
 app.use("/api/v1/contacts", contactRoutes);
 app.use("/api/v1/inspections", inspectionRoutes);
 app.use("/api/v1/media", mediaRoutes);
+app.use("/api/v1/location", locationRoutes);
 
 app.use(errorHandler);
 
