@@ -4,6 +4,7 @@ import {
   getPropertyById,
   updateProperty,
   deleteProperty,
+  updatePropertyLocation,
 } from "../services/property.service.js";
 
 export const create = async (req, res, next) => {
@@ -72,6 +73,23 @@ export const remove = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Property deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateLocation = async (req, res, next) => {
+  try {
+    const property = await updatePropertyLocation(
+      req.params.id,
+      req.body,
+      req.user.userId
+    );
+
+    res.status(200).json({
+      success: true,
+      data: { property },
     });
   } catch (error) {
     next(error);

@@ -114,3 +114,53 @@ export const deleteProperty = async (propertyId, userId) => {
 
   return property;
 };
+
+export const updatePropertyLocation = async (
+  propertyId,
+  location,
+  userId
+) => {
+  const { latitude, longitude } = location;
+
+  if (latitude === undefined || longitude === undefined) {
+    const error = new Error("Latitude and longitude are required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (
+    latitude < -90 ||
+    latitude > 90 ||
+    longitude < -180 ||
+    longitude > 180
+  ) {
+    const error = new Error("Invalid coordinates");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const property = await Property.findOneAndUpdate(
+    {
+      _id: propertyId,
+      owner: userId,
+    },
+    {
+      location: {
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!property) {
+    const error = new Error("Property not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return property;
+};
