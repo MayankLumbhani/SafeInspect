@@ -1,3 +1,5 @@
+import { reverseGeocode } from "../services/location.service.js";
+
 export const getLocation = async (req, res, next) => {
   try {
     const { latitude, longitude } = req.body;
@@ -19,11 +21,12 @@ export const getLocation = async (req, res, next) => {
       throw error;
     }
 
+    const location = await reverseGeocode(latitude, longitude);
+
     res.status(200).json({
       success: true,
       data: {
-        latitude: Number(latitude),
-        longitude: Number(longitude),
+        location,
       },
     });
   } catch (error) {
