@@ -2,6 +2,7 @@ import {
   getDashboardStats,
   getRecentInspections,
   getRecentProperties,
+  getRecentContacts,
 } from "../services/dashboard.service.js";
 
 export const getDashboard = async (req, res, next) => {
@@ -16,12 +17,17 @@ export const getDashboard = async (req, res, next) => {
       req.user.userId
     );
 
+    const recentContacts = await getRecentContacts(
+      req.user.userId
+    );
+
     res.status(200).json({
       success: true,
       data: {
         stats,
         recentInspections,
         recentProperties,
+        recentContacts,
       },
     });
   } catch (error) {

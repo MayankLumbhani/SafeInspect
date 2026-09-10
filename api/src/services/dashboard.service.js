@@ -52,3 +52,13 @@ export const getRecentProperties = async (userId) => {
 
   return properties;
 };
+
+export const getRecentContacts = async (userId) => {
+  const contacts = await Contact.find({
+    owner: userId,
+  })
+    .sort({ createdAt: -1 })
+    .limit(5);
+
+  return contacts;
+};
