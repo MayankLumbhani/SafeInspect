@@ -31,3 +31,14 @@ export const getDashboardStats = async (userId) => {
     pendingInspections,
   };
 };
+
+export const getRecentInspections = async (userId) => {
+  const inspections = await Inspection.find({
+    inspector: userId,
+  })
+    .populate("property", "title address city")
+    .sort({ createdAt: -1 })
+    .limit(5);
+
+  return inspections;
+};
