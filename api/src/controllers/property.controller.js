@@ -5,6 +5,7 @@ import {
   updateProperty,
   deleteProperty,
   updatePropertyLocation,
+  searchProperties,
 } from "../services/property.service.js";
 
 export const create = async (req, res, next) => {
@@ -90,6 +91,22 @@ export const updateLocation = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: { property },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const search = async (req, res, next) => {
+  try {
+    const properties = await searchProperties(
+      req.user.userId,
+      req.query.query
+    );
+
+    res.status(200).json({
+      success: true,
+      data: { properties },
     });
   } catch (error) {
     next(error);

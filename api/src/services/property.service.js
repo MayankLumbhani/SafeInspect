@@ -164,3 +164,24 @@ export const updatePropertyLocation = async (
 
   return property;
 };
+
+export const searchProperties = async (userId, query) => {
+  if (!query || !query.trim()) {
+    const error = new Error("Search query is required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const search = query.trim();
+
+  const properties = await Property.find({
+    owner: userId,
+    $or: [
+      { title: { $regex: search, $options: "i" } },
+      { city: { $regex: search, $options: "i" } },
+      { address: { $regex: search, $options: "i" } },
+    ],
+  }).sort({ createdAt: -1 });
+
+  return properties;
+};
