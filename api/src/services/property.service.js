@@ -168,7 +168,9 @@ export const updatePropertyLocation = async (
 export const searchProperties = async (
   userId,
   query,
-  filters = {}
+  filters = {},
+  page = 1,
+  limit = 10
 ) => {
   const { type, minRent, maxRent } = filters;
 
@@ -202,8 +204,24 @@ export const searchProperties = async (
     }
   }
 
-  const properties = await Property.find(conditions)
-    .sort({ createdAt: -1 });
+  const skip = (page - 1) * limit;
 
-  return properties;
+  const [properties, total] = await Promise.all([
+    Property.find(conditions)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+
+    Property.countDocuments(conditions),
+  ]);
+
+  return {
+    properties,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };

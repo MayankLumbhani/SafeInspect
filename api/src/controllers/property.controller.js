@@ -104,21 +104,25 @@ export const search = async (req, res, next) => {
       type,
       minRent,
       maxRent,
+      page = 1,
+      limit = 10,
     } = req.query;
 
-    const properties = await searchProperties(
+    const result = await searchProperties(
       req.user.userId,
       query,
       {
         type,
         minRent,
         maxRent,
-      }
+      },
+      Number(page),
+      Number(limit)
     );
 
     res.status(200).json({
       success: true,
-      data: { properties },
+      data: result,
     });
   } catch (error) {
     next(error);
