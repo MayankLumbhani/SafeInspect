@@ -99,9 +99,21 @@ export const updateLocation = async (req, res, next) => {
 
 export const search = async (req, res, next) => {
   try {
+    const {
+      query,
+      type,
+      minRent,
+      maxRent,
+    } = req.query;
+
     const properties = await searchProperties(
       req.user.userId,
-      req.query.query
+      query,
+      {
+        type,
+        minRent,
+        maxRent,
+      }
     );
 
     res.status(200).json({
