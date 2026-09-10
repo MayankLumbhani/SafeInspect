@@ -130,3 +130,36 @@ export const deleteInspection = async (inspectionId, userId) => {
 
   return inspection;
 };
+
+export const searchInspections = async (
+  userId,
+  query,
+  filters = {}
+) => {
+  const { status, property } = filters;
+
+  const conditions = {
+    inspector: userId,
+  };
+
+  if (query && query.trim()) {
+    conditions.notes = {
+      $regex: query.trim(),
+      $options: "i",
+    };
+  }
+
+  if (status) {
+    conditions.status = status;
+  }
+
+  if (property) {
+    conditions.property = property;
+  }
+
+  const inspections = await Inspection.find(conditions)
+    .populate("property", "title address city")
+    .sort({ createdAt: -1 });
+
+  return inspections;
+};

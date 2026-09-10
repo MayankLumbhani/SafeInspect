@@ -5,6 +5,7 @@ import {
   addRoom,
   updateInspection,
   deleteInspection,
+  searchInspections,
 } from "../services/inspection.service.js";
 
 export const create = async (req, res, next) => {
@@ -93,6 +94,32 @@ export const remove = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Inspection deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const search = async (req, res, next) => {
+  try {
+    const {
+      query,
+      status,
+      property,
+    } = req.query;
+
+    const inspections = await searchInspections(
+      req.user.userId,
+      query,
+      {
+        status,
+        property,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      data: { inspections },
     });
   } catch (error) {
     next(error);
