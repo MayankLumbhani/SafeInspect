@@ -4,6 +4,7 @@ import {
   getContactById,
   updateContact,
   deleteContact,
+  searchContacts,
 } from "../services/contact.service.js";
 
 export const create = async (req, res, next) => {
@@ -72,6 +73,22 @@ export const remove = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Contact deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const search = async (req, res, next) => {
+  try {
+    const contacts = await searchContacts(
+      req.user.userId,
+      req.query.query
+    );
+
+    res.status(200).json({
+      success: true,
+      data: { contacts },
     });
   } catch (error) {
     next(error);

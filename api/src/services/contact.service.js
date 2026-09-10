@@ -94,3 +94,24 @@ export const deleteContact = async (contactId, userId) => {
 
   return contact;
 };
+
+export const searchContacts = async (userId, query) => {
+  if (!query || !query.trim()) {
+    const error = new Error("Search query is required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const search = query.trim();
+
+  const contacts = await Contact.find({
+    owner: userId,
+    $or: [
+      { name: { $regex: search, $options: "i" } },
+      { phone: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+    ],
+  }).sort({ createdAt: -1 });
+
+  return contacts;
+};
