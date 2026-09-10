@@ -1,4 +1,7 @@
-import { reverseGeocode } from "../services/location.service.js";
+import {
+  reverseGeocode,
+  searchLocation,
+} from "../services/location.service.js";
 
 export const getLocation = async (req, res, next) => {
   try {
@@ -28,6 +31,21 @@ export const getLocation = async (req, res, next) => {
       data: {
         location,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const search = async (req, res, next) => {
+  try {
+    const { query } = req.query;
+
+    const locations = await searchLocation(query);
+
+    res.status(200).json({
+      success: true,
+      data: { locations },
     });
   } catch (error) {
     next(error);
