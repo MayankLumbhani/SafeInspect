@@ -42,3 +42,13 @@ export const getRecentInspections = async (userId) => {
 
   return inspections;
 };
+
+export const getRecentProperties = async (userId) => {
+  const properties = await Property.find({
+    owner: userId,
+  })
+    .sort({ createdAt: -1 })
+    .limit(5);
+
+  return properties;
+};
