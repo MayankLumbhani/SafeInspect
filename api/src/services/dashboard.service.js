@@ -1,6 +1,7 @@
 import Property from "../models/Property.js";
 import Contact from "../models/Contact.js";
 import Inspection from "../models/Inspection.js";
+import mongoose from "mongoose";
 
 export const getDashboardStats = async (userId) => {
   const [
@@ -61,4 +62,32 @@ export const getRecentContacts = async (userId) => {
     .limit(5);
 
   return contacts;
+};
+
+export const getInspectionStatusSummary = async (userId) => {
+  const summary = await Inspection.aggregate([
+    {
+      $match: {
+        inspector: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $group: {
+        _id: "$status",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const result = {
+    draft: 0,
+    in_progress: 0,
+    completed: 0,
+  };
+
+  summary.forEach((item) => {
+    result[item._id] = item.count;
+  });
+
+  return result;
 };
