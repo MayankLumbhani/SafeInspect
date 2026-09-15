@@ -1,14 +1,29 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 import { useState } from "react";
+import { loginUser } from "../../src/api/auth";
+import { saveToken } from "../../src/storage/authStorage";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    console.log("Login:", { email, password });
-  };
+const handleLogin = async () => {
+  try {
+    const response = await loginUser({
+      email,
+      password,
+    });
+
+    await saveToken(response.data.token);
+
+    console.log("Login successful");
+    console.log("User:", response.data.user);
+
+  } catch (error) {
+    console.error("Login failed:", error.message);
+  }
+};
 
   return (
     <View style={styles.container}>

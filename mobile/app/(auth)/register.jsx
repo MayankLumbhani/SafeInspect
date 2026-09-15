@@ -7,19 +7,30 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { useState } from "react";
+import { registerUser } from "../../src/api/auth";
 
 export default function RegisterScreen() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleRegister = () => {
-    console.log("Register:", {
+const handleRegister = async () => {
+  console.log("REGISTER BUTTON PRESSED");
+
+  try {
+    const response = await registerUser({
       name,
       email,
       password,
     });
-  };
+
+    console.log("Registration successful:", response);
+
+    router.replace("/(auth)/login");
+  } catch (error) {
+    console.error("Registration failed:", error.message);
+  }
+};
 
   return (
     <View style={styles.container}>
